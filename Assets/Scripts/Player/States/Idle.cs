@@ -12,6 +12,8 @@ public class Idle : State
     {
         base.Enter();
 
+        
+
     }
 
     public override void Exit()
@@ -22,6 +24,12 @@ public class Idle : State
     public override void Update()
     {
         base.Update();
+
+        //switch to attack
+        if (controller.Attack())
+        {
+            return;
+        }
 
         // Switch to walking state
         if (controller.hasJumpInput)

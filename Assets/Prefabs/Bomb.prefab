@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 8778478101460337054}
   - component: {fileID: 8598730617505109701}
   - component: {fileID: 5684465551787454818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,13 +234,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a52c5f20596a4604aab93348fb2df765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionPrefab: {fileID: 1866433796623269047, guid: ad100dc774f810f41bfe9f421120e9a4,
+  ExplosionPrefab: {fileID: 1866433796623269047, guid: 08574c2832e99ce40b9cdd3ebbc94df2,
     type: 3}
   woodBreakingPrefab: {fileID: 7441028964555483105, guid: 2b37f84049b588b41b8cd84ad5443d40,
     type: 3}
   ExplosionDelay: 5
   blastRadius: 4
   blastDamage: 5
+  DamageToShip: 1
 --- !u!114 &8598730617505109701
 MonoBehaviour:
   m_ObjectHideFlags: 0

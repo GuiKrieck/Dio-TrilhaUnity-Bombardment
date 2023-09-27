@@ -22,6 +22,12 @@ public class Walking : State
     {
         base.Update();
 
+        //switch to attack
+        if (controller.Attack())
+        {
+            return;
+        }
+
         //switch to Jump
 
         if (controller.hasJumpInput)

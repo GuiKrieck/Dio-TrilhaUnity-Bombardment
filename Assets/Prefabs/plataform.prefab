@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0973649dd05b28746b03ee2623a19e7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 5
   health: 0
 --- !u!114 &6688790446722404304
 MonoBehaviour:
@@ -82,7 +82,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a10bd75796a1c042afb61ca48c45215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plataformPrefab: {fileID: 2871702974253079102}
 --- !u!1001 &4454613539791138693
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,15 +14,22 @@ public class GameManager : MonoBehaviour
     [Header("Audio)")]
     [SerializeField] private AudioSource musicPlayer;
     [SerializeField] private AudioSource gameoverSfx;
+    [SerializeField] private AudioSource VictorySfx;
 
     [Header("Score")]
     //Score
     [SerializeField] private float score;
     [SerializeField] private int highestScore;
+    [SerializeField] private float victoryPoints = 500;
 
     public List<GameObject> plataformPrefabs;
     public float secondsToRespawnThePlataform;
 
+    public ShipControllerScript ShipController;
+    public LifeScript ShipLife;
+    public bool hasWon;
+    public Animator characterAnimator;
+        
     public bool isGameOver { get; private set; }
 
     private void Awake()
@@ -76,6 +83,12 @@ public class GameManager : MonoBehaviour
         //stop music
         musicPlayer.Stop();
 
+        if (hasWon)
+        {
+            Winner();
+            return;
+        
+        }
         //play sfx
         gameoverSfx.Play();
 
@@ -108,5 +121,27 @@ public class GameManager : MonoBehaviour
 
         int plataformPrefabIndex = Random.Range(0, plataformPrefabs.Count);
         Instantiate(plataformPrefabs[plataformPrefabIndex], originalPosition, plataformPrefabs[plataformPrefabIndex].transform.rotation);
+    }
+
+    private void Winner()
+    {
+        //play the victory Sfx
+        VictorySfx.Play();
+
+        //Add Points
+        score += victoryPoints;
+
+        //playcharacterAnimation
+        characterAnimator.SetTrigger("tWon");
+
+        //save highest score
+        if (GetScore() > getHighestScore())
+        {
+            highestScore = GetScore();
+        }
+        PlayerPrefs.SetInt(KEY_HIGHEST_SCORE, getHighestScore());
+
+        //Reload Scene
+        StartCoroutine(ReloadScene(10));
     }
 }

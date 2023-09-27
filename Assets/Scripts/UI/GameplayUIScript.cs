@@ -8,6 +8,7 @@ public class GameplayUIScript : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI scoreLabel;
     [SerializeField] private TextMeshProUGUI highestScoreLabel;
+    [SerializeField] public TextMeshProUGUI ShipLife;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,5 +21,6 @@ public class GameplayUIScript : MonoBehaviour
     {
         scoreLabel.text = GameManager.Instance.GetScore().ToString();
         highestScoreLabel.text = GameManager.Instance.getHighestScore().ToString();
+        ShipLife.text = (GameManager.Instance.ShipLife.health.ToString() + " / " + GameManager.Instance.ShipLife.maxHealth.ToString());
     }
 }

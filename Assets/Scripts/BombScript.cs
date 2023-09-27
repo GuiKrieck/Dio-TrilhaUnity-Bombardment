@@ -9,6 +9,8 @@ public class BombScript : MonoBehaviour
     public float ExplosionDelay = 5f;
     public float blastRadius = 5f;
     public int blastDamage = 10;
+    public int DamageToShip = 1;
+
 
     // Start is called before the first frame update
     void Start()
@@ -75,7 +77,16 @@ public class BombScript : MonoBehaviour
         float distanceRate = Mathf.Clamp(distance / blastRadius, 0, 1);
         float damageRate = 1f - Mathf.Pow(distanceRate, 4);
         return (int)Mathf.Ceil(damageRate * blastDamage);
-            
-        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var otherObject = other.gameObject;
+        if (otherObject.CompareTag("Ship"))
+        {
+            GameManager.Instance.ShipController.TakeDamage(DamageToShip);
+            Instantiate(ExplosionPrefab, transform.position, ExplosionPrefab.transform.rotation);
+            Destroy(gameObject);
+        }
     }
 }

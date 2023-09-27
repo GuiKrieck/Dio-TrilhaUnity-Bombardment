@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Walking walkingState;
     [HideInInspector] public Jump jumpState;
     [HideInInspector] public Dead deadState;
+    [HideInInspector] public Attack attackState;
 
     //internal properties
     [HideInInspector] public bool hasJumpInput;
@@ -23,6 +24,10 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Rigidbody characterRigidbody;
     [HideInInspector] public Collider thisCollider;
     [HideInInspector] public Animator characterAnimator;
+
+    //attack
+    public GameObject swordHitbox;
+    public float swordKnockbackImpulse = 10f;
 
     private void Awake()
     {
@@ -40,20 +45,25 @@ public class PlayerController : MonoBehaviour
         walkingState = new Walking(this);
         jumpState = new Jump(this);
         deadState = new Dead(this);
+        attackState = new Attack(this);
         stateMachine.ChangeState(idleState);
+
+        swordHitbox.SetActive(false);
     }
 
 
     void Update()
     {
         //check game Over
-        if (GameManager.Instance.isGameOver)
+        if (GameManager.Instance.isGameOver && !GameManager.Instance.hasWon)
         {
             if(stateMachine.currentStateName != deadState.name)
             {
                 stateMachine.ChangeState(deadState);
             }
         }
+
+        if (GameManager.Instance.hasWon) { return; }
         //Read input
         bool isUp = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
         bool isDown = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
@@ -70,7 +80,7 @@ public class PlayerController : MonoBehaviour
         // set the velocity from 0 to 1 to the animator so the character "knows" whta animation to play
         float velocity = characterRigidbody.velocity.magnitude;// this line will calculate the velocity that the Character Rigidbody is moving
         float velocityRate = velocity / movementSpeed; // this line will guarantee that it's between 0 and 1
-        characterAnimator.SetFloat("fVelocity", velocity);// and here finally we get the speed and pass to the animator.
+        characterAnimator.SetFloat("fVelocity", velocityRate);// and here finally we get the speed and pass to the animator.
 
         //DetectGround
         //DetectGround();
@@ -112,6 +122,44 @@ public class PlayerController : MonoBehaviour
         //apply rotation
         characterRigidbody.MoveRotation(newRotation);
 
+    }
+
+
+    public void onSwordCollisionEnter(Collider other)
+    {
+        var otherObject = other.gameObject;
+        var otherRigidbody = otherObject.GetComponent<Rigidbody>();
+        var isTarget = otherObject.layer == LayerMask.NameToLayer("Bombs");
+        if(isTarget && otherRigidbody != null)
+        {
+            otherRigidbody.velocity.IsZero();
+            var positionDiff = other.transform.position - gameObject.transform.position;
+            var impulseVector = new Vector3(positionDiff.normalized.x, 0, positionDiff.normalized.z);
+            impulseVector *= swordKnockbackImpulse;
+            otherRigidbody.AddForce(impulseVector, ForceMode.Impulse);
+        }
+    }
+
+    public bool Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            stateMachine.ChangeState(attackState);
+            return true;
+        }
+        return false;
+    }
+
+    public void waitALittle()
+    {
+        StartCoroutine(WaitToChangeStates());
+    }
+
+    private IEnumerator WaitToChangeStates()
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        stateMachine.ChangeState(idleState);
     }
 
     /*

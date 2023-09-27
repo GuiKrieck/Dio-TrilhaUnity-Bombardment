@@ -24,6 +24,10 @@ public class CannonScript : MonoBehaviour
     void Update()
     {
         //ignore if game is over
+        if (GameManager.Instance.hasWon)
+        {
+            Destroy(gameObject);
+        }
         if (GameManager.Instance.isGameOver) { return; }
 
 
@@ -34,6 +38,7 @@ public class CannonScript : MonoBehaviour
 
             Fire();
         }
+
         
     }
 
